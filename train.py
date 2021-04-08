@@ -27,7 +27,7 @@ def get_train_parser():
     parser = argparse.ArgumentParser(description='Emb2Emb')
     # paths
     parser.add_argument("--dataset_path", type=str,
-                        required=True, choices=["data/yelp", "data/wikilarge"], help="Path to dataset")
+                        required=True, help="Path to dataset")
     parser.add_argument("--outputdir", type=str,
                         default='savedir/', help="Output directory")
     parser.add_argument("--outputmodelname", type=str, default='model.pickle')
