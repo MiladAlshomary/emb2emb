@@ -54,7 +54,8 @@ def generate_dataset_with_tokenizer(TEXT_FILE,
 
     TOKENIZER.train([TEXT_FILE], vocab_size=MAX_WORDS, special_tokens=[
                     "[PAD]", "<unk>", "<SOS>", "<EOS>"], min_frequency=MIN_FREQ)
-    TOKENIZER.save("/".join(DATASET_FILE.split("/")[:-1]), "tokenizer")
+
+    TOKENIZER.save_model("/".join(DATASET_FILE.split("/")[:-1]), "tokenizer")
 
     ###### Save sequences to dataset #####
     file_counter = 0
@@ -63,7 +64,7 @@ def generate_dataset_with_tokenizer(TEXT_FILE,
     batch_counter = 0
     ided_sentences_by_length = defaultdict(list)
     with Bar('Writing sentences to hdf5') as bar:
-        with open(TEXT_FILE, 'r') as f:
+        with open(TEXT_FILE, 'r', encoding='utf-8') as f:
 
             def save_to_h5(sentlist, length):
                 nonlocal dataset, batch_counter, file_counter, MAX_FILE_SIZE_BATCHES
@@ -262,8 +263,8 @@ def get_tokenizer(tokenizer, location='bert-base-uncased'):
         return BertTokenizer.from_pretrained(location)
     else:
         if location is not None:
-            return eval(tokenizer)(vocab_file=location + '-vocab.json',
-                                   merges_file=location + '-merges.txt')
+            return eval(tokenizer)(vocab=location + '-vocab.json',
+                                   merges=location + '-merges.txt')
         else:
             return eval(tokenizer)()
 

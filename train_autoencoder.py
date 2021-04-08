@@ -20,7 +20,7 @@ import numpy as np
 from tqdm import tqdm
 from autoencoders.data_loaders import HDF5Dataset, get_tokenizer
 
-DEFAULT_CONFIG = "autoencoders/config/default.json"
+DEFAULT_CONFIG = "/workspace/ceph_data/thirdparty/emb2emb/autoencoders/config/default.json"
 LOG_DIR_NAME = "logs/"
 
 
