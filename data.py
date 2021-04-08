@@ -66,10 +66,34 @@ def get_data(params):
         else:
             params.binary_classifier = None
         params.current_epoch = 0
-        return _get_data_pairs(params), evaluate_yelp
+        return _get_data_pairs(params), evaluate_morals
   
     else:
         raise ValueError("Don't know dataset " + str(params.dataset_path))
+
+def evaluate_morals(model, mode="valid", params=None, predictions=None):
+
+    # compute bleu with input
+    if mode == "valid":
+        data = params.dataset_path+"s1.dev" if not params.invert_style else params.dataset_path+"s2.dev"
+    elif mode == "test":
+        data = params.dataset_path+"s1.test" if not params.invert_style else params.dataset_path+"s2.test"
+
+    inputs = data
+    ref = data
+
+    inputs = read_file(inputs, params)
+    ref = read_file(ref, params)
+    ref = [[r] for r in ref]
+    self_bleu, predictions = evaluate_bleu(model, inputs, ref, params.batch_size,
+                                           0 if not params.print_outputs else params.max_prints,
+                                           return_predictions=True, predictions=predictions)
+    b_acc = eval_binary_accuracy(model, predictions, mode, params)
+
+    _save_to_csv(params, self_bleu=self_bleu, b_acc=b_acc)
+    params.current_epoch = params.current_epoch + 1
+
+    return self_bleu + b_acc, self_bleu, b_acc
 
 
 def evaluate_yelp(model, mode="valid", params=None, predictions=None):
@@ -360,7 +384,7 @@ def _get_data_pairs(params):
 
 
 def pretty_print_prediction(input_text, gold_output, predicted_output):
-    print("\n\n\n")
-    print("Input: ", input_text)
-    print("Output: ", predicted_output)
-    print("Gold: ", gold_output)
+    print("\n\n")
+    print("Input: ", input_text.encode('utf-8'))
+    print("Output: ", predicted_output.encode('utf-8'))
+    print("Gold: ", gold_output.encode('utf-8'))
