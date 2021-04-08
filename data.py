@@ -10,7 +10,7 @@ import numpy as np
 
 
 def read_all(path):
-    with open(path, 'r') as f:
+    with open(path, 'r', encoding='utf-8') as f:
         all_examples = f.readlines()
         all_examples = [t.strip() for t in all_examples]
     return all_examples
@@ -53,6 +53,21 @@ def get_data(params):
             params.binary_classifier = None
         params.current_epoch = 0
         return _get_data_pairs(params), evaluate_yelp
+    
+    elif "moral" in params.dataset_path:
+        params.run_id = randint(0, 999999999)
+
+        # load the binary classifier
+        if params.binary_classifier_path:
+            params.binary_tokenizer = AutoTokenizer.from_pretrained(
+                params.binary_classifier_path)
+            params.binary_classifier = AutoModelForSequenceClassification.from_pretrained(
+                params.binary_classifier_path)
+        else:
+            params.binary_classifier = None
+        params.current_epoch = 0
+        return _get_data_pairs(params), evaluate_yelp
+  
     else:
         raise ValueError("Don't know dataset " + str(params.dataset_path))
 
