@@ -20,8 +20,8 @@ def tokenize(s):
 
 def get_tokenizer(tokenizer, location='bert-base-uncased'):
     # TODO: do we need to pass more options to the file?
-    tok = eval(tokenizer)(vocab_file=location + '-vocab.json',
-                          merges_file=location + '-merges.txt')
+    tok = eval(tokenizer)(vocab=location + '-vocab.json',
+                          merges=location + '-merges.txt')
     tok.add_special_tokens(["[PAD]", "<unk>", "<SOS>", "<EOS>"])
     return tok
 
