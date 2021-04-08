@@ -200,7 +200,7 @@ def get_mode(params):
 
 def _load_real_data(real_data_file):
     data = []
-    with open(real_data_file, 'r') as f:
+    with open(real_data_file, 'r', encoding='utf-8') as f:
         for l in f:
             data.append(l.strip())
 
